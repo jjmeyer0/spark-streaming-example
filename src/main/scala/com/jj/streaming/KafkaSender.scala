@@ -1,4 +1,4 @@
-package com.jj
+package com.jj.streaming
 
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 

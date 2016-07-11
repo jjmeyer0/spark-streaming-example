@@ -1,12 +1,12 @@
-package com.jj
+package com.jj.streaming.service
 
 import com.holdenkarau.spark.testing.SharedSparkContext
-import com.jj.service.ItemAction
+import com.jj.streaming.KafkaSender
 import com.jj.utils.ItemTestUtils
+import org.mockito.Matchers._
+import org.mockito.Mockito._
 import org.scalatest.FunSuite
 import org.scalatest.mock.MockitoSugar
-import org.mockito.Mockito._
-import org.mockito.Matchers._
 
 class ItemActionSpec extends FunSuite with SharedSparkContext with MockitoSugar  {
   // issue in spark test base. See: https://github.com/holdenk/spark-testing-base/issues/33

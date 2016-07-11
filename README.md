@@ -49,5 +49,5 @@ Running the Application
     * Maven:
     
     ```bash
-    $ mvn clean install exec:java -Dexec.mainClass="com.jj.ItemApp"
+    $ mvn clean install exec:java -Dexec.mainClass="com.jj.streaming.ItemApp"
     ```

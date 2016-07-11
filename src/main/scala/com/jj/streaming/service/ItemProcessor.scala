@@ -1,4 +1,4 @@
-package com.jj.service
+package com.jj.streaming.service
 
 import com.jj.log.Logging
 import com.jj.model.Item

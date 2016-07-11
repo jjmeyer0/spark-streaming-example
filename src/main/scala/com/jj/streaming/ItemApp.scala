@@ -1,8 +1,8 @@
-package com.jj
+package com.jj.streaming
 
-import kafka.serializer.StringDecoder
-import com.jj.service.{ItemAction, ItemProcessor}
+import com.jj.streaming.service.{ItemAction, ItemProcessor}
 import com.typesafe.config.ConfigFactory
+import kafka.serializer.StringDecoder
 import org.apache.spark._
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka._

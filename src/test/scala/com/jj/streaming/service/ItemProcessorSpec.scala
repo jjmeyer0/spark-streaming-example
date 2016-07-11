@@ -1,8 +1,7 @@
-package com.jj
+package com.jj.streaming.service
 
 import com.holdenkarau.spark.testing.StreamingSuiteBase
 import com.jj.model.Item
-import com.jj.service.ItemProcessor
 import com.jj.utils.ItemTestUtils
 import org.scalatest.mock.MockitoSugar
 

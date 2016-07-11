@@ -1,8 +1,8 @@
-package com.jj.service
+package com.jj.streaming.service
 
-import com.jj.KafkaSender
 import com.jj.log.Logging
 import com.jj.model.Item
+import com.jj.streaming.KafkaSender
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.dstream.DStream
