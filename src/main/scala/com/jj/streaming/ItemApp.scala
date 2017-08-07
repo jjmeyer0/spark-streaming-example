@@ -2,10 +2,11 @@ package com.jj.streaming
 
 import com.jj.streaming.service.{ItemAction, ItemProcessor}
 import com.typesafe.config.ConfigFactory
-import kafka.serializer.StringDecoder
+import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.spark._
 import org.apache.spark.streaming._
-import org.apache.spark.streaming.kafka._
+import org.apache.spark.streaming.dstream.InputDStream
+import org.apache.spark.streaming.kafka010._
 
 
 object ItemApp extends App {
@@ -17,7 +18,11 @@ object ItemApp extends App {
   private lazy val conf = new SparkConf().setMaster(master).setAppName(applicationName)
   private val kafkaParams: Map[String, String] = Map(
     "bootstrap.servers" -> applicationConf.getString("spark.kafka.bootstrap.servers"),
-    "auto.offset.reset" -> applicationConf.getString("spark.kafka.auto.offset.reset")
+    "auto.offset.reset" -> applicationConf.getString("spark.kafka.auto.offset.reset"),
+    "key.serializer" -> applicationConf.getString("spark.kafka.key.serializer"),
+    "value.serializer" -> applicationConf.getString("spark.kafka.value.serializer"),
+    "key.deserializer" -> applicationConf.getString("spark.kafka.key.deserializer"),
+    "value.deserializer" -> applicationConf.getString("spark.kafka.value.deserializer")
   )
   private val inTopics: Set[String] = {
     import scala.collection.JavaConverters._
@@ -36,12 +41,19 @@ object ItemApp extends App {
     val ssc = new StreamingContext(conf, batchDuration)
     ssc.checkpoint(checkpointDirectory)
 
-    val kstream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, inTopics)
+    val kstream: InputDStream[ConsumerRecord[String, String]] = KafkaUtils.createDirectStream[String, String](
+      ssc,
+      LocationStrategies.PreferConsistent,
+      ConsumerStrategies.Subscribe[String, String](inTopics, kafkaParams)
+    )
+
     val kafkaSender = {
       val kafkaSenderParams = Map(
         "bootstrap.servers" -> applicationConf.getString("spark.kafka.bootstrap.servers"),
-        "key.serializer" -> "org.apache.kafka.common.serialization.StringSerializer",
-        "value.serializer" -> "org.apache.kafka.common.serialization.StringSerializer"
+        "key.serializer" -> applicationConf.getString("spark.kafka.key.serializer"),
+        "value.serializer" -> applicationConf.getString("spark.kafka.value.serializer"),
+        "key.deserializer" -> applicationConf.getString("spark.kafka.key.deserializer"),
+        "value.deserializer" -> applicationConf.getString("spark.kafka.value.deserializer")
       )
       ssc.sparkContext.broadcast(KafkaSender(kafkaSenderParams))
     }
